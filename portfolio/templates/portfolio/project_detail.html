@@ -1,0 +1,97 @@
+{% extends "portfolio/base.html" %}
+{% block title %}{{ project.title }} • Portfólio{% endblock %}
+
+{% block content %}
+<main class="wrap" style="padding: 28px 0 40px">
+  <section class="section-title" style="margin-top: 12px">
+    <div>
+      <h3 style="margin:0; font-size:18px">{{ project.title }}</h3>
+      <p style="margin:6px 0 0; color:var(--muted); font-size:13px">
+        {% if project.summary %}{{ project.summary }}{% endif %}
+      </p>
+    </div>
+    <a class="btn" href="{% url 'portfolio:home' %}#projects">← Voltar</a>
+  </section>
+
+  <div class="grid cols-2">
+    <div class="card">
+      <h4 style="margin:0 0 10px">Sobre o projeto</h4>
+
+      {% if project.description %}
+        <p style="margin:0; color:var(--muted); font-size:14px; white-space:pre-line">
+          {{ project.description }}
+        </p>
+      {% else %}
+        <p style="margin:0; color:var(--muted); font-size:14px">
+          Descrição não cadastrada ainda.
+        </p>
+      {% endif %}
+
+      <div class="divider" style="margin:16px 0"></div>
+
+      <div class="tags">
+        {% if project.tech_stack %}
+          {# aqui não fazemos split; se quiser tags bonitas, eu adapto igual na home depois #}
+          <span class="tag">{{ project.tech_stack }}</span>
+        {% else %}
+          <span class="tag">Django</span>
+          <span class="tag">PostgreSQL</span>
+        {% endif %}
+      </div>
+
+      <div class="divider" style="margin:16px 0"></div>
+
+      <div class="links">
+        {% if project.repo_url %}
+          <a href="{{ project.repo_url }}" target="_blank" rel="noreferrer">GitHub</a>
+        {% endif %}
+        {% if project.demo_url %}
+          <a href="{{ project.demo_url }}" target="_blank" rel="noreferrer">Demo</a>
+        {% endif %}
+      </div>
+
+      {% if not project.repo_url and not project.demo_url %}
+        <p class="hint" style="margin-top:12px">Adicione repo_url/demo_url no admin para aparecer aqui.</p>
+      {% endif %}
+    </div>
+
+    <div class="card">
+      <h4 style="margin:0 0 10px">Imagens</h4>
+
+      <div class="grid" style="grid-template-columns: repeat(2, minmax(0, 1fr)); gap:12px">
+        {% for img in images %}
+          <div class="card" style="padding:10px; box-shadow:none">
+            <div style="
+              width:100%;
+              aspect-ratio: 16/10;
+              border-radius:12px;
+              border:1px solid var(--line);
+              overflow:hidden;
+              background: rgba(255,255,255,.02);
+            ">
+              <img src="{{ img.image_url }}" alt="{{ img.caption }}" style="width:100%; height:100%; object-fit:cover; display:block">
+            </div>
+            {% if img.caption %}
+              <p style="margin:10px 0 0; color:var(--muted); font-size:13px">{{ img.caption }}</p>
+            {% endif %}
+          </div>
+        {% empty %}
+          <p style="margin:0; color:var(--muted); font-size:14px">
+            Nenhuma imagem cadastrada. (Admin → Project Images)
+          </p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <footer style="padding-top:28px">
+    <div class="foot">
+      <span>© <span id="y"></span> • Portfólio (Django + PostgreSQL)</span>
+      <span class="links">
+        <a href="{% url 'portfolio:home' %}#projects">Projetos</a>
+        <a href="{% url 'portfolio:home' %}#contact">Contato</a>
+      </span>
+    </div>
+  </footer>
+</main>
+{% endblock %}

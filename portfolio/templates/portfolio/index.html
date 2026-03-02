@@ -1,0 +1,295 @@
+{% extends "portfolio/base.html" %}
+{% block title %}{{ profile.full_name|default:"Portfólio" }}{% endblock %}
+
+{% block content %}
+<main class="wrap" id="home">
+  <section class="hero">
+    <div class="kicker">
+      <span class="pill">Engenharia Biomédica</span>
+      <span>•</span>
+      <span>
+        {% if profile and profile.headline %}
+          {{ profile.headline }}
+        {% else %}
+          Saúde Digital • Software • Dados
+        {% endif %}
+      </span>
+    </div>
+
+    <h2>
+      Construo soluções digitais na interseção de
+      <span class="grad">software</span> e <span class="grad">saúde</span>.
+    </h2>
+
+    <p>
+      {% if profile and profile.bio %}
+        {{ profile.bio }}
+      {% else %}
+        Portfólio com back-end em Django e persistência em PostgreSQL (Neon), exibindo conteúdo dinamicamente via queries.
+      {% endif %}
+    </p>
+
+    <div class="hero-actions">
+      <a class="btn primary" href="#projects">Ver Projetos</a>
+      <a class="btn" href="#contact">Falar comigo</a>
+    </div>
+
+    <div class="meta" aria-label="Resumo">
+      <span><i></i> {% if profile and profile.location %}{{ profile.location }}{% else %}São Paulo • Brasil{% endif %}</span>
+      <span><i></i> Disponível para estágio</span>
+      <span><i></i> Django • PostgreSQL</span>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="section-title">
+      <div>
+        <h3>Sobre</h3>
+        <p>Bio + foto + habilidades</p>
+      </div>
+    </div>
+
+    <div class="about">
+      <div class="card bio">
+        <div class="about-left">
+          <div class="avatar">
+            {% if profile and profile.profile_photo_url %}
+              <img src="{{ profile.profile_photo_url }}" alt="Foto de {{ profile.full_name }}">
+            {% endif %}
+          </div>
+
+          <div>
+            <p>
+              {% if profile %}
+                Sou <strong>{{ profile.full_name }}</strong>.
+                {% if profile.headline %}{{ profile.headline }}.{% endif %}
+                {% if profile.location %}Base: <strong>{{ profile.location }}</strong>.{% endif %}
+              {% else %}
+                Sou estudante de Engenharia Biomédica e construo projetos em saúde digital.
+              {% endif %}
+            </p>
+
+            <div class="tags" style="margin-top:14px">
+              {% for s in skills %}
+                <span class="tag">{{ s.name }}</span>
+              {% empty %}
+                <span class="tag">Python</span>
+                <span class="tag">Django</span>
+                <span class="tag">PostgreSQL</span>
+                <span class="tag">Git</span>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="card stat">
+          <b>O que eu busco</b>
+          <span>Estágio/Projetos em saúde digital, software, dados e produtos.</span>
+        </div>
+        <div class="card stat">
+          <b>Como eu trabalho</b>
+          <span>Entrego com organização, comunicação clara e foco em impacto.</span>
+        </div>
+        <div class="card stat">
+          <b>Meu diferencial</b>
+          <span>Interseção entre engenharia biomédica e desenvolvimento de software.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+  </section>
+
+  <section id="projects">
+    <div class="section-title">
+      <div>
+        <h3>Projetos em destaque</h3>
+        <p>Cards puxados do PostgreSQL</p>
+      </div>
+      <a class="btn" href="#projects">Ver todos</a>
+    </div>
+
+    <div class="grid cols-3">
+      {% for item in projects %}
+        {% with p=item.obj tags=item.tags %}
+          <article class="card">
+            <div class="thumb" aria-hidden="true"></div>
+
+            <h4>{{ p.title }}</h4>
+            <p>{{ p.summary }}</p>
+
+            <div class="tags">
+              {% if tags and tags|length > 0 %}
+                {% for t in tags %}
+                  <span class="tag">{{ t }}</span>
+                {% endfor %}
+              {% else %}
+                <span class="tag">Django</span>
+                <span class="tag">PostgreSQL</span>
+              {% endif %}
+            </div>
+
+            <div class="row mini">
+              {% if p.repo_url %}
+                <a href="{{ p.repo_url }}" target="_blank" rel="noreferrer">GitHub</a>
+              {% else %}
+                <span></span>
+              {% endif %}
+              <a href="{% url 'portfolio:project_detail' p.slug %}">Detalhes →</a>
+            </div>
+          </article>
+        {% endwith %}
+      {% empty %}
+        <div class="card">
+          <h4>Nenhum projeto cadastrado</h4>
+          <p>Cadastre em Admin → Projects e volte aqui.</p>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="divider"></div>
+  </section>
+
+  <section id="experience">
+    <div class="section-title">
+      <div>
+        <h3>Experiência & Formação</h3>
+        <p>Timeline puxada do banco (quando cadastrada)</p>
+      </div>
+    </div>
+
+    <div class="grid cols-2">
+      <div class="card">
+        <h4 style="margin:0 0 10px">Experiência</h4>
+        <div class="timeline">
+          {% for e in experiences %}
+            <div class="titem">
+              <span class="bullet"></span>
+              <div class="body">
+                <b>{{ e.position }} • {{ e.company }}</b>
+                <small>
+                  {% if e.is_current %}Atual{% else %}
+                    {% if e.start_date %}{{ e.start_date }}{% endif %}
+                    {% if e.end_date %} — {{ e.end_date }}{% endif %}
+                  {% endif %}
+                </small>
+                <p>{{ e.description }}</p>
+              </div>
+            </div>
+          {% empty %}
+            <p style="color:var(--muted); margin:0">Cadastre experiências no admin para aparecer aqui.</p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="card">
+        <h4 style="margin:0 0 10px">Formação & Certificações</h4>
+        <div class="timeline">
+          {% for ed in educations %}
+            <div class="titem">
+              <span class="bullet"></span>
+              <div class="body">
+                <b>{{ ed.degree }} • {{ ed.institution }}</b>
+                <small>
+                  {% if ed.start_date %}{{ ed.start_date }}{% endif %}
+                  {% if ed.end_date %} — {{ ed.end_date }}{% endif %}
+                </small>
+                <p>{{ ed.notes }}</p>
+              </div>
+            </div>
+          {% empty %}
+            <p style="color:var(--muted); margin:0">Cadastre sua formação no admin para aparecer aqui.</p>
+          {% endfor %}
+
+          {% for c in certifications %}
+            <div class="titem">
+              <span class="bullet" style="background:rgba(167,139,250,.9)"></span>
+              <div class="body">
+                <b>{{ c.name }}</b>
+                <small>{% if c.issuer %}{{ c.issuer }}{% endif %}</small>
+                <p>
+                  {% if c.credential_url %}
+                    <a href="{{ c.credential_url }}" target="_blank" rel="noreferrer">Ver credencial</a>
+                  {% else %}
+                    Certificação cadastrada.
+                  {% endif %}
+                </p>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+  </section>
+
+  <section id="contact">
+    <div class="section-title">
+      <div>
+        <h3>Contato</h3>
+        <p>Formulário salvando no PostgreSQL</p>
+      </div>
+    </div>
+
+    <div class="grid cols-2" style="gap:14px">
+      <div class="card">
+        <h4 style="margin:0 0 10px">Vamos conversar</h4>
+        <p style="margin:0; color:var(--muted); font-size:14px">
+          Se você tem uma vaga, projeto, pesquisa ou ideia em saúde digital, me chama.
+        </p>
+
+        <div class="divider" style="margin:16px 0"></div>
+
+        <div class="links">
+          {% if profile and profile.linkedin_url %}<a href="{{ profile.linkedin_url }}" target="_blank" rel="noreferrer">LinkedIn</a>{% endif %}
+          {% if profile and profile.github_url %}<a href="{{ profile.github_url }}" target="_blank" rel="noreferrer">GitHub</a>{% endif %}
+          {% if profile and profile.email %}<a href="mailto:{{ profile.email }}">Email</a>{% endif %}
+        </div>
+
+        <p class="hint">As mensagens do formulário são salvas em <b>contact_message</b> (PostgreSQL).</p>
+      </div>
+
+      <form class="card" method="POST" action="{% url 'portfolio:submit_contact' %}">
+        {% csrf_token %}
+
+        <label>Nome</label>
+        <input name="name" placeholder="Seu nome" required value="{{ form.name.value|default:'' }}" />
+
+        <label>Email</label>
+        <input type="email" name="email" placeholder="seu@email.com" required value="{{ form.email.value|default:'' }}" />
+
+        <label>Assunto</label>
+        <input name="subject" placeholder="Sobre estágio / projeto / pesquisa" required value="{{ form.subject.value|default:'' }}" />
+
+        <label>Mensagem</label>
+        <textarea name="message" placeholder="Escreva sua mensagem..." required>{{ form.message.value|default:'' }}</textarea>
+
+        <div style="display:flex; gap:12px; align-items:center; margin-top:12px; flex-wrap:wrap">
+          <button class="btn primary" type="submit">Enviar mensagem</button>
+          <span class="hint">
+            {% if form.errors %}
+              Confira os campos.
+            {% else %}
+              (Django + Postgres)
+            {% endif %}
+          </span>
+        </div>
+      </form>
+    </div>
+
+    <footer>
+      <div class="foot">
+        <span>© <span id="y"></span> • Portfólio (Django + PostgreSQL)</span>
+        <span class="links">
+          <a href="#home">Topo</a>
+          <a href="#projects">Projetos</a>
+          <a href="#contact">Contato</a>
+        </span>
+      </div>
+    </footer>
+  </section>
+</main>
+{% endblock %}
