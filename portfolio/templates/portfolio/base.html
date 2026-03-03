@@ -151,8 +151,51 @@
       .foot{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap}
       .links{display:flex; gap:14px}
       .links a:hover{color:var(--text)}
+
+      /* Contact form layout fix */
+      .form-grid{
+        display:grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .field label{
+        display:block;
+        font-size:12px;
+        color: var(--muted);
+        margin: 10px 0 6px;
+      }
+
+      .field input,
+      .field textarea{
+        display:block;
+        width:100%;
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        background: rgba(255,255,255,.02);
+        color: var(--text);
+        outline: none;
+      }
+
+      .field textarea{ min-height: 120px; resize: vertical; }
+
+      .field.full{ grid-column: 1 / -1; }
+
+      .field.actions{
+        display:flex;
+        align-items:center;
+        gap:12px;
+        flex-wrap:wrap;
+      }
+
+      @media (max-width: 680px){
+        .form-grid{ grid-template-columns: 1fr; }
+      }
     </style>
   </head>
+
+
 
   <body>
     <header class="nav">

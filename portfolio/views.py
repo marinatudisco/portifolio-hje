@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Profile, Project, ContactMessage
 from .forms import ContactForm
+from django.views.decorators.http import require_POST
 
 
 def home(request):
@@ -77,3 +78,12 @@ def submit_contact(request):
         "certifications": certifications,
         "form": form,
     })
+@require_POST
+def submit_contact(request):
+    ContactMessage.objects.create(
+        name=request.POST.get("name", "").strip(),
+        email=request.POST.get("email", "").strip(),
+        subject=request.POST.get("subject", "").strip(),
+        message=request.POST.get("message", "").strip(),
+    )
+    return redirect("portfolio:home")

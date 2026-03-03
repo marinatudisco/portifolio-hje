@@ -7,13 +7,7 @@
     <div class="kicker">
       <span class="pill">Engenharia Biomédica</span>
       <span>•</span>
-      <span>
-        {% if profile and profile.headline %}
-          {{ profile.headline }}
-        {% else %}
-          Saúde Digital • Software • Dados
-        {% endif %}
-      </span>
+      <span>Django / SQL • Saúde Digital</span>
     </div>
 
     <h2>
@@ -31,13 +25,13 @@
 
     <div class="hero-actions">
       <a class="btn primary" href="#projects">Ver Projetos</a>
-      <a class="btn" href="#contact">Falar comigo</a>
+      <a class="btn" href="#contact">Contato</a>
     </div>
 
     <div class="meta" aria-label="Resumo">
       <span><i></i> {% if profile and profile.location %}{{ profile.location }}{% else %}São Paulo • Brasil{% endif %}</span>
       <span><i></i> Disponível para estágio</span>
-      <span><i></i> Django • PostgreSQL</span>
+      <span><i></i> Django • PostgreSQL (Neon)</span>
     </div>
   </section>
 
@@ -45,7 +39,7 @@
     <div class="section-title">
       <div>
         <h3>Sobre</h3>
-        <p>Bio + foto + habilidades</p>
+        <p>Quem eu sou • Como trabalho • O que busco</p>
       </div>
     </div>
 
@@ -73,10 +67,10 @@
               {% for s in skills %}
                 <span class="tag">{{ s.name }}</span>
               {% empty %}
-                <span class="tag">Python</span>
                 <span class="tag">Django</span>
                 <span class="tag">PostgreSQL</span>
-                <span class="tag">Git</span>
+                <span class="tag">HTML/CSS</span>
+                <span class="tag">Saúde Digital</span>
               {% endfor %}
             </div>
           </div>
@@ -252,33 +246,36 @@
         <p class="hint">As mensagens do formulário são salvas em <b>contact_message</b> (PostgreSQL).</p>
       </div>
 
-      <form class="card" method="POST" action="{% url 'portfolio:submit_contact' %}">
+      <form class="card" method="post" action="{% url 'portfolio:submit_contact' %}">
         {% csrf_token %}
-
-        <label>Nome</label>
-        <input name="name" placeholder="Seu nome" required value="{{ form.name.value|default:'' }}" />
-
-        <label>Email</label>
-        <input type="email" name="email" placeholder="seu@email.com" required value="{{ form.email.value|default:'' }}" />
-
-        <label>Assunto</label>
-        <input name="subject" placeholder="Sobre estágio / projeto / pesquisa" required value="{{ form.subject.value|default:'' }}" />
-
-        <label>Mensagem</label>
-        <textarea name="message" placeholder="Escreva sua mensagem..." required>{{ form.message.value|default:'' }}</textarea>
-
-        <div style="display:flex; gap:12px; align-items:center; margin-top:12px; flex-wrap:wrap">
-          <button class="btn primary" type="submit">Enviar mensagem</button>
-          <span class="hint">
-            {% if form.errors %}
-              Confira os campos.
-            {% else %}
-              (Django + Postgres)
-            {% endif %}
-          </span>
+      
+        <div class="form-grid">
+          <div class="field">
+            <label for="id_name">Nome</label>
+            <input id="id_name" name="name" placeholder="Seu nome" required />
+          </div>
+      
+          <div class="field">
+            <label for="id_email">Email</label>
+            <input id="id_email" name="email" type="email" placeholder="seu@email.com" required />
+          </div>
+      
+          <div class="field full">
+            <label for="id_subject">Assunto</label>
+            <input id="id_subject" name="subject" placeholder="Sobre estágio / projeto / pesquisa" required />
+          </div>
+      
+          <div class="field full">
+            <label for="id_message">Mensagem</label>
+            <textarea id="id_message" name="message" placeholder="Escreva sua mensagem..." required></textarea>
+          </div>
+      
+          <div class="field full actions">
+            <button class="btn primary" type="submit">Enviar mensagem</button>
+            <span class="hint">Resposta em até 24h</span>
+          </div>
         </div>
       </form>
-    </div>
 
     <footer>
       <div class="foot">
